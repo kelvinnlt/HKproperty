@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>香港大型屋苑比較儀表板 - Hong Kong Major Housing Estates Comparison Dashboard</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <h1>香港大型屋苑比較儀表板</h1>
+            <p class="subtitle">Hong Kong Major Housing Estates Comparison Dashboard</p>
+        </header>
+
+        <!-- Summary Statistics Panel -->
+        <div class="stats-panel">
+            <div class="stat-card">
+                <div class="stat-value" id="totalEstates">15</div>
+                <div class="stat-label">總屋苑數目 Total Estates</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="avgPrice">$12,345</div>
+                <div class="stat-label">平均成交價 Avg Price/sqft</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalUnits">134,928</div>
+                <div class="stat-label">總單位數目 Total Units</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeDistrict">將軍澳</div>
+                <div class="stat-label">最活躍地區 Most Active District</div>
+            </div>
+        </div>
+
+        <div class="dashboard">
+            <!-- Filter Panel -->
+            <aside class="filter-panel">
+                <div class="filter-header">
+                    <h3>篩選條件 Filters</h3>
+                    <button class="btn btn--sm btn--secondary" id="resetFilters">重設 Reset</button>
+                </div>
+
+                <!-- Search -->
+                <div class="filter-group">
+                    <label class="form-label">搜尋 Search</label>
+                    <input type="text" class="form-control" id="searchInput" placeholder="搜尋屋苑名稱或地區...">
+                </div>
+
+                <!-- District Filter -->
+                <div class="filter-group">
+                    <label class="form-label">地區 District</label>
+                    <select class="form-control" id="districtFilter" multiple>
+                        <option value="">全部地區 All Districts</option>
+                    </select>
+                </div>
+
+                <!-- Price Range Filter -->
+                <div class="filter-group">
+                    <label class="form-label">平均成交價 Avg Price (HK$/sqft)</label>
+                    <div class="range-container">
+                        <input type="range" class="range-input" id="priceMin" min="8000" max="21000" value="8000">
+                        <input type="range" class="range-input" id="priceMax" min="8000" max="21000" value="21000">
+                        <div class="range-values">
+                            <span id="priceMinValue">$8,000</span> - <span id="priceMaxValue">$21,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transaction Volume Filter -->
+                <div class="filter-group">
+                    <label class="form-label">成交量 Transaction Volume</label>
+                    <div class="range-container">
+                        <input type="range" class="range-input" id="volumeMin" min="8" max="64" value="8">
+                        <input type="range" class="range-input" id="volumeMax" min="8" max="64" value="64">
+                        <div class="range-values">
+                            <span id="volumeMinValue">8</span> - <span id="volumeMaxValue">64</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Number of Blocks Filter -->
+                <div class="filter-group">
+                    <label class="form-label">座數 Number of Blocks</label>
+                    <div class="range-container">
+                        <input type="range" class="range-input" id="blocksMin" min="6" max="99" value="6">
+                        <input type="range" class="range-input" id="blocksMax" min="6" max="99" value="99">
+                        <div class="range-values">
+                            <span id="blocksMinValue">6</span> - <span id="blocksMaxValue">99</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Total Units Filter -->
+                <div class="filter-group">
+                    <label class="form-label">單位總數目 Total Units</label>
+                    <div class="range-container">
+                        <input type="range" class="range-input" id="unitsMin" min="1900" max="25000" value="1900">
+                        <input type="range" class="range-input" id="unitsMax" min="1900" max="25000" value="25000">
+                        <div class="range-values">
+                            <span id="unitsMinValue">1,900</span> - <span id="unitsMaxValue">25,000</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Construction Year Filter -->
+                <div class="filter-group">
+                    <label class="form-label">建成年份範圍 Construction Year Range</label>
+                    <input type="text" class="form-control" id="yearFilter" placeholder="例: 1980-1990">
+                </div>
+
+                <!-- Developer Filter -->
+                <div class="filter-group">
+                    <label class="form-label">發展商 Developer</label>
+                    <select class="form-control" id="developerFilter" multiple>
+                        <option value="">全部發展商 All Developers</option>
+                    </select>
+                </div>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <div class="table-header">
+                    <div class="table-controls">
+                        <span class="results-count">
+                            顯示 <span id="filteredCount">15</span> / <span id="totalCount">15</span> 個屋苑
+                        </span>
+                        <button class="btn btn--sm btn--outline" id="exportBtn">匯出 CSV Export</button>
+                    </div>
+                </div>
+
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th class="sortable" data-column="中文名稱">中文名稱<span class="sort-indicator"></span></th>
+                                <th class="sortable" data-column="英文名稱">英文名稱<span class="sort-indicator"></span></th>
+                                <th class="sortable" data-column="地區">地區<span class="sort-indicator"></span></th>
+                                <th class="sortable" data-column="最近一個月平均成交價">平均成交價/呎<span class="sort-indicator"></span></th>
+                                <th class="sortable" data-column="最近一個月成交量">成交量<span class="sort-indicator"></span></th>
+                                <th class="sortable" data-column="實用面積範圍">實用面積範圍<span class="sort-indicator"></span></th>
+                                <th class="sortable" data-column="建成日期範圍">建成日期<span class="sort-indicator"></span></th>
+                                <th class="sortable" data-column="期數">期數<span class="sort-indicator"></span></th>
+                                <th class="sortable" data-column="座數">座數<span class="sort-indicator"></span></th>
+                                <th class="sortable" data-column="單位總數目">單位總數<span class="sort-indicator"></span></th>
+                                <th class="sortable" data-column="成交量比例">成交量比例%<span class="sort-indicator"></span></th>
+                                <th class="sortable" data-column="屋苑發展商">發展商<span class="sort-indicator"></span></th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBody">
+                            <!-- Data will be populated by JavaScript -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div class="loading hidden" id="loadingIndicator">
+                    <div class="loading-spinner"></div>
+                    <div>正在載入數據... Loading data...</div>
+                </div>
+
+                <div class="no-results hidden" id="noResults">
+                    <div class="no-results-icon">🔍</div>
+                    <div class="no-results-text">沒有找到符合條件的屋苑 No estates match your criteria</div>
+                    <button class="btn btn--secondary" onclick="resetAllFilters()">重設篩選 Reset Filters</button>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
